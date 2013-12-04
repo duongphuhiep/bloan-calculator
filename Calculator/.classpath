@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+  <classpathentry kind="src" path="src/test/java" output="target/test-classes" including="**/*.java"/>
+  <classpathentry kind="src" path="src/test/resources" output="target/test-classes" excluding="**/*.java"/>
+  <classpathentry kind="src" path="src/main/java" including="**/*.java"/>
+  <classpathentry kind="src" path="src/main/resources" excluding="**/*.java"/>
+  <classpathentry kind="output" path="target/classes"/>
+  <classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+  <classpathentry kind="var" path="M2_REPO/net/java/dev/designgridlayout/designgridlayout/1.11/designgridlayout-1.11.jar" sourcepath="M2_REPO/net/java/dev/designgridlayout/designgridlayout/1.11/designgridlayout-1.11-sources.jar">
+    <attributes>
+      <attribute value="jar:file:/D:/prg/Developper/.m2/net/java/dev/designgridlayout/designgridlayout/1.11/designgridlayout-1.11-javadoc.jar!/" name="javadoc_location"/>
+    </attributes>
+  </classpathentry>
+  <classpathentry kind="var" path="M2_REPO/junit/junit/4.8.1/junit-4.8.1.jar" sourcepath="M2_REPO/junit/junit/4.8.1/junit-4.8.1-sources.jar"/>
+  <classpathentry kind="var" path="M2_REPO/com/google/guava/guava/15.0/guava-15.0.jar" sourcepath="M2_REPO/com/google/guava/guava/15.0/guava-15.0-sources.jar">
+    <attributes>
+      <attribute value="jar:file:/D:/prg/Developper/.m2/com/google/guava/guava/15.0/guava-15.0-javadoc.jar!/" name="javadoc_location"/>
+    </attributes>
+  </classpathentry>
+</classpath>
