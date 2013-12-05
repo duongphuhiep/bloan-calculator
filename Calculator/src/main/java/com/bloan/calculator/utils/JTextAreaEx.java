@@ -12,12 +12,7 @@ public class JTextAreaEx extends JTextArea
 	public JTextAreaEx()
 	{
 		super();
-		this.setDocument(new PlainDocumentLimit());
 		((AbstractDocument)this.getDocument()).setDocumentFilter(new DocumentStringFilter(this, Utils.DefaultValidator));
-	}
-
-	public void setMaxLength(int maxLength) {
-		((PlainDocumentLimit)this.getDocument()).setLimit(maxLength);
 	}
 
 	public void setValidator(IStringValidator validator) {

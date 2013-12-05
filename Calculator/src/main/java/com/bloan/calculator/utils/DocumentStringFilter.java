@@ -1,10 +1,6 @@
 package com.bloan.calculator.utils;
 
-import java.awt.Color;
-
-import javax.swing.BorderFactory;
 import javax.swing.JComponent;
-import javax.swing.border.Border;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;

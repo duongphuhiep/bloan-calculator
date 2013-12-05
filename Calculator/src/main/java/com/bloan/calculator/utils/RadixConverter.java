@@ -37,16 +37,37 @@ public class RadixConverter {
 	};
 
 	public static int hexToInt(String hexString) {
-		return Long.valueOf(hexString.trim(), 16).intValue();
+		hexString = trimFirstZero(hexString.trim());
+		if (hexString.length() > 8)
+		{
+			throw new InvalidParameterException("The hexString is too long (>8)");
+		}
+
+		return Long.valueOf(hexString, 16).intValue();
 	}
 	public static double hexToDouble(String hexString) {
+		hexString = trimFirstZero(hexString.trim());
+		if (hexString.length() > 16)
+		{
+			throw new InvalidParameterException("The hexString is too long (>16)");
+		}
 		return Double.longBitsToDouble(new BigInteger(hexString.trim(), 16)
 				.longValue());
 	}
 	public static int binToInt(String binString) {
+		binString = trimFirstZero(binString.trim());
+		if (binString.length() > 32)
+		{
+			throw new InvalidParameterException("The binString is too long (>32)");
+		}
 		return Long.valueOf(binString.trim(), 2).intValue();
 	}
 	public static double binToDouble(String binString) {
+		binString = trimFirstZero(binString.trim());
+		if (binString.length() > 64)
+		{
+			throw new InvalidParameterException("The binString is too long (>64)");
+		}
 		return Double
 				.longBitsToDouble(new BigInteger(binString.trim(), 2).longValue());
 	}

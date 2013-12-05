@@ -1,5 +1,10 @@
 package com.bloan.calculator.utils;
 
+import java.awt.Color;
+
+import javax.swing.BorderFactory;
+import javax.swing.border.Border;
+
 import com.google.common.base.Strings;
 
 
@@ -85,4 +90,6 @@ public class Utils
 			return true;
 		}
 	};
+
+	public static final Border redBorder = BorderFactory.createLineBorder(Color.RED, 2);
 }

@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import javax.swing.BorderFactory;
 import javax.swing.JCheckBox;
 import javax.swing.JPanel;
+import javax.swing.border.Border;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
@@ -39,6 +40,8 @@ public class BinaryPane extends JPanel
 
 	ActionListener actionListener;
 
+	Border textFieldBorder = BorderFactory.createLineBorder(Color.GRAY);
+
 	/**
 	 * Create the panel.
 	 */
@@ -48,7 +51,7 @@ public class BinaryPane extends JPanel
 
 		textField = new JTextAreaEx();
 		textField.setLineWrap(true);
-		textField.setBorder(BorderFactory.createLineBorder(Color.GRAY));
+		textField.setBorder(textFieldBorder);
 		//Dimension preferredSize = textField.getPreferredSize();
 		//preferredSize.height = 50;
 		//textField.setPreferredSize(preferredSize);
@@ -201,11 +204,6 @@ public class BinaryPane extends JPanel
 		this.actionListener = actionListener;
 	}
 
-	public void refreshConstraintCharacter(int maxLength) {
-
-		textField.setMaxLength(maxLength);
-	}
-
 	/**
 	 * Fire when user change value bit
 	 */
@@ -258,6 +256,16 @@ public class BinaryPane extends JPanel
 		for (int i = 0; i<s.length(); i++) {
 			checkBits.get(i+d).setSelected(s.charAt(i) == '1');
 		}
+	}
+
+	/**
+	 * set border of the binary text field, use null parameter to restore the default border
+	 */
+	public void setTextFieldBorder(Border border) {
+		if (border == null) {
+			this.textField.setBorder(textFieldBorder);
+		}
+		this.textField.setBorder(border);
 	}
 
 }

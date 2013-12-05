@@ -1,5 +1,6 @@
 package com.bloan.calculator;
 
+import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -18,6 +19,7 @@ import javax.swing.JRadioButton;
 import javax.swing.JTextArea;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.SwingUtilities;
+import javax.swing.border.Border;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
@@ -155,26 +157,6 @@ public class MainApp
 		initEvents();
 	}
 
-	private void refreshConstraintCharacter()
-	{
-		if (intRdo.isSelected())
-		{
-			hexTextField.setMaxLength(8);
-
-			decTextField.setValidator(Utils.IntValidator);
-
-			binPane.refreshConstraintCharacter(32);
-		}
-		else {
-
-			hexTextField.setMaxLength(16);
-
-			decTextField.setValidator(Utils.DoubleValidator);
-
-			binPane.refreshConstraintCharacter(64);
-		}
-	}
-
 	private void initComponents()
 	{
 		ButtonGroup buttonGroup = new ButtonGroup();
@@ -195,8 +177,6 @@ public class MainApp
 		hexTextField.setFont(bigText);
 
 		hexTextField.setValidator(Utils.HexValidator);
-
-		refreshConstraintCharacter();
 	}
 
 	private void initEvents() {
@@ -208,7 +188,6 @@ public class MainApp
 				try {
 					binPane.showIntPane();
 					cleanForm();
-					refreshConstraintCharacter();
 				}
 				catch (Exception ex) {
 					ex.printStackTrace();
@@ -224,7 +203,6 @@ public class MainApp
 				try {
 					binPane.showDoublePane();
 					cleanForm();
-					refreshConstraintCharacter();
 				}
 				catch (Exception ex) {
 					ex.printStackTrace();
@@ -234,16 +212,19 @@ public class MainApp
 
 		decTextField.getDocument().addDocumentListener(new DocumentListener()
 		{
+			final Border normalBorder = decTextField.getBorder();
+
 			private void onChanged() {
 				if (skipChangeEvt>0) {
+					decTextField.setBorder(normalBorder);
 					return;
 				}
 				String dec = decTextField.getText().trim();
 				if (Strings.isNullOrEmpty(dec)) {
+					decTextField.setBorder(normalBorder);
 					cleanForm();
 					return;
 				}
-
 				skipChangeEvt++;
 				try {
 					String hex;
@@ -259,8 +240,10 @@ public class MainApp
 
 					hexTextField.setText(hex);
 					binPane.setBinaryString(bin);
+					decTextField.setBorder(normalBorder);
 				}
 				catch (Exception ex) {
+					decTextField.setBorder(Utils.redBorder);
 					ex.printStackTrace();
 				}
 				finally {
@@ -289,13 +272,17 @@ public class MainApp
 
 		hexTextField.getDocument().addDocumentListener(new DocumentListener()
 		{
+			final Border normalBorder = hexTextField.getBorder();
+
 			private void onChanged() {
 				if (skipChangeEvt>0) {
+					hexTextField.setBorder(normalBorder);
 					return;
 				}
 
-				String hex = hexTextField.getText().trim();
+				String hex = hexTextField.getText().trim().toUpperCase();
 				if (Strings.isNullOrEmpty(hex)) {
+					hexTextField.setBorder(normalBorder);
 					cleanForm();
 					return;
 				}
@@ -315,9 +302,12 @@ public class MainApp
 
 					decTextField.setText(dec);
 					binPane.setBinaryString(bin);
+
+					hexTextField.setBorder(normalBorder);
 				}
 				catch (Exception ex) {
 					ex.printStackTrace();
+					hexTextField.setBorder(Utils.redBorder);
 				}
 				finally {
 					skipChangeEvt--;
@@ -349,11 +339,13 @@ public class MainApp
 			public void actionPerformed(ActionEvent e)
 			{
 				if (skipChangeEvt>0) {
+					binPane.setTextFieldBorder(null);
 					return;
 				}
 
 				String bin = binPane.getBinaryString();
 				if (Strings.isNullOrEmpty(bin)) {
+					binPane.setTextFieldBorder(null);
 					cleanForm();
 					return;
 				}
@@ -374,6 +366,7 @@ public class MainApp
 				}
 				catch (Exception ex) {
 					ex.printStackTrace();
+					binPane.setTextFieldBorder(Utils.redBorder);
 				}
 				finally {
 					skipChangeEvt--;
@@ -385,9 +378,9 @@ public class MainApp
 	private void cleanForm() {
 		skipChangeEvt++;
 		try {
+			binPane.setBinaryString("");
 			decTextField.setText("");
 			hexTextField.setText("");
-			binPane.setBinaryString("");
 		}
 		finally {
 			skipChangeEvt--;
