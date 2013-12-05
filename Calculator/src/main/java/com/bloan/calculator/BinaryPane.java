@@ -3,7 +3,7 @@ package com.bloan.calculator;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Color;
-import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.security.InvalidParameterException;
@@ -50,7 +50,9 @@ public class BinaryPane extends JPanel
 		//preferredSize.height = 50;
 		//textField.setPreferredSize(preferredSize);
 		add(textField, BorderLayout.NORTH);
-		//textField.setColumns(10);
+		Font f = textField.getFont();
+		Font bigText = new Font(f.getName(), f.getStyle(), f.getSize()+3);
+		textField.setFont(bigText);
 
 		add(bitsPanel, BorderLayout.CENTER);
 		bitsPanel.setLayout(new CardLayout(0, 0));

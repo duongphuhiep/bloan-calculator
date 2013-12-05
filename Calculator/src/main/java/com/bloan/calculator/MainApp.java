@@ -1,11 +1,14 @@
 package com.bloan.calculator;
 
-import java.awt.BorderLayout;
+import java.awt.Container;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
+import javax.swing.GroupLayout;
+import javax.swing.GroupLayout.Alignment;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -14,17 +17,19 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.SwingUtilities;
+import javax.swing.border.EtchedBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
 import com.google.common.base.Strings;
-
-import net.java.dev.designgridlayout.DesignGridLayout;
+import com.google.common.collect.Sets;
+import java.awt.Font;
 
 public class MainApp
 {
-	private JFrame frame;
+	private JFrame frmRadixConverter;
 	private int skipChangeEvt = 0;
 
 	/**
@@ -39,7 +44,7 @@ public class MainApp
 				try
 				{
 					MainApp window = new MainApp();
-					window.frame.setVisible(true);
+					window.frmRadixConverter.setVisible(true);
 				}
 				catch (Exception e)
 				{
@@ -72,26 +77,84 @@ public class MainApp
 	 */
 	private void initialize()
 	{
-		frame = new JFrame();
+		frmRadixConverter = new JFrame();
+		frmRadixConverter.setTitle("Radix Converter");
+		Container contentPane = frmRadixConverter.getContentPane();
 
-		JPanel panelCalculator = new JPanel();
-		{
-			DesignGridLayout layout = new DesignGridLayout(panelCalculator);
-			layout.disableSmartVerticalResize();
-			layout.row().grid().add(intRdo, doubleRdo);
-			layout.row().grid(new JLabel("Dec")).add(decTextField);
-			layout.row().grid(new JLabel("Hex")).add(hexTextField);
-			layout.row().grid(new JLabel("Bin")).add(binPane);
-			layout.emptyRow();
-			layout.row().bar().left(helpBtn).right(logResultBtn);
-		}
+		frmRadixConverter.setSize(new Dimension(800, 600));
 
-		frame.setBounds(100, 100, 550, 400);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.getContentPane().setLayout(new BorderLayout(0, 0));
+		JLabel lblDec = new JLabel("Dec");
+		JLabel lblHex = new JLabel("Hex");
+		JLabel lblBin = new JLabel("Bin");
 
-		frame.getContentPane().add(logTextArea, BorderLayout.CENTER);
-		frame.getContentPane().add(panelCalculator, BorderLayout.WEST);
+		GroupLayout groupLayout = new GroupLayout(contentPane);
+		groupLayout.setHorizontalGroup(
+			groupLayout.createParallelGroup(Alignment.LEADING)
+				.addGroup(groupLayout.createSequentialGroup()
+					.addContainerGap()
+					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+						.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING)
+							.addGroup(groupLayout.createSequentialGroup()
+								.addComponent(lblDec)
+								.addPreferredGap(ComponentPlacement.RELATED))
+							.addGroup(groupLayout.createSequentialGroup()
+								.addComponent(lblHex)
+								.addPreferredGap(ComponentPlacement.RELATED)))
+						.addComponent(lblBin))
+					.addGap(4)
+					.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING, false)
+						.addGroup(groupLayout.createSequentialGroup()
+							.addPreferredGap(ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+							.addComponent(binPane, GroupLayout.PREFERRED_SIZE, 348, GroupLayout.PREFERRED_SIZE))
+						.addGroup(groupLayout.createParallelGroup(Alignment.LEADING, false)
+							.addGroup(groupLayout.createSequentialGroup()
+								.addGap(1)
+								.addComponent(helpBtn)
+								.addPreferredGap(ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+								.addComponent(logResultBtn))
+							.addGroup(groupLayout.createSequentialGroup()
+								.addPreferredGap(ComponentPlacement.RELATED)
+								.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING, false)
+									.addGroup(groupLayout.createSequentialGroup()
+										.addComponent(intRdo)
+										.addPreferredGap(ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+										.addComponent(doubleRdo, GroupLayout.PREFERRED_SIZE, 131, GroupLayout.PREFERRED_SIZE))
+									.addComponent(hexTextField, Alignment.LEADING)
+									.addComponent(decTextField, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 348, Short.MAX_VALUE)))))
+					.addPreferredGap(ComponentPlacement.UNRELATED)
+					.addComponent(logTextArea, GroupLayout.DEFAULT_SIZE, 48, Short.MAX_VALUE)
+					.addGap(6))
+		);
+		groupLayout.setVerticalGroup(
+			groupLayout.createParallelGroup(Alignment.LEADING)
+				.addGroup(groupLayout.createSequentialGroup()
+					.addContainerGap()
+					.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
+						.addComponent(logTextArea, GroupLayout.DEFAULT_SIZE, 551, Short.MAX_VALUE)
+						.addGroup(groupLayout.createSequentialGroup()
+							.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
+								.addComponent(doubleRdo)
+								.addComponent(intRdo))
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
+								.addComponent(lblDec)
+								.addComponent(decTextField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+							.addGap(6)
+							.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
+								.addComponent(hexTextField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+								.addComponent(lblHex))
+							.addGap(8)
+							.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+								.addGroup(groupLayout.createSequentialGroup()
+									.addComponent(binPane, GroupLayout.PREFERRED_SIZE, 183, GroupLayout.PREFERRED_SIZE)
+									.addGap(37)
+									.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+										.addComponent(logResultBtn)
+										.addComponent(helpBtn)))
+								.addComponent(lblBin))))
+					.addGap(11))
+		);
+		contentPane.setLayout(groupLayout);
 
 		initComponents();
 		initEvents();
@@ -110,6 +173,11 @@ public class MainApp
 		helpBtn.setBorder(BorderFactory.createEmptyBorder());
 
 		logTextArea.setBorder(BorderFactory.createTitledBorder("Log results"));
+
+		Font f = decTextField.getFont();
+		Font bigText = new Font(f.getName(), f.getStyle(), f.getSize()+3);
+		decTextField.setFont(bigText);
+		hexTextField.setFont(bigText);
 	}
 
 	private void initEvents() {
