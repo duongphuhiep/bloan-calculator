@@ -8,6 +8,8 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 
+import com.bloan.calculator.utils.RadixConverter;
+
 public class RadixConverterTest
 {
 

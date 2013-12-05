@@ -2,6 +2,7 @@ package com.bloan.calculator;
 
 import java.awt.Container;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -13,19 +14,17 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JTextArea;
-import javax.swing.JTextField;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.SwingUtilities;
-import javax.swing.border.EtchedBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
+import com.bloan.calculator.utils.JTextFieldEx;
+import com.bloan.calculator.utils.RadixConverter;
+import com.bloan.calculator.utils.Utils;
 import com.google.common.base.Strings;
-import com.google.common.collect.Sets;
-import java.awt.Font;
 
 public class MainApp
 {
@@ -64,8 +63,8 @@ public class MainApp
 
 	JRadioButton intRdo = new JRadioButton("Integer (32 bits)", true);
 	JRadioButton doubleRdo = new JRadioButton("Double (64 bits)", false);
-	JTextField decTextField = new JTextField();
-	JTextField hexTextField = new JTextField();
+	JTextFieldEx decTextField = new JTextFieldEx();
+	JTextFieldEx hexTextField = new JTextFieldEx();
 	JButton logResultBtn = new JButton("Log Result");
 	JButton helpBtn = new JButton();
 	JTextArea logTextArea = new JTextArea();
@@ -94,25 +93,18 @@ public class MainApp
 					.addContainerGap()
 					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
 						.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING)
-							.addGroup(groupLayout.createSequentialGroup()
-								.addComponent(lblDec)
-								.addPreferredGap(ComponentPlacement.RELATED))
-							.addGroup(groupLayout.createSequentialGroup()
-								.addComponent(lblHex)
-								.addPreferredGap(ComponentPlacement.RELATED)))
+							.addComponent(lblDec)
+							.addComponent(lblHex))
 						.addComponent(lblBin))
-					.addGap(4)
-					.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING, false)
-						.addGroup(groupLayout.createSequentialGroup()
-							.addPreferredGap(ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-							.addComponent(binPane, GroupLayout.PREFERRED_SIZE, 348, GroupLayout.PREFERRED_SIZE))
-						.addGroup(groupLayout.createParallelGroup(Alignment.LEADING, false)
-							.addGroup(groupLayout.createSequentialGroup()
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+						.addGroup(Alignment.TRAILING, groupLayout.createParallelGroup(Alignment.TRAILING, false)
+							.addGroup(Alignment.LEADING, groupLayout.createSequentialGroup()
 								.addGap(1)
 								.addComponent(helpBtn)
 								.addPreferredGap(ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
 								.addComponent(logResultBtn))
-							.addGroup(groupLayout.createSequentialGroup()
+							.addGroup(Alignment.LEADING, groupLayout.createSequentialGroup()
 								.addPreferredGap(ComponentPlacement.RELATED)
 								.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING, false)
 									.addGroup(groupLayout.createSequentialGroup()
@@ -120,9 +112,10 @@ public class MainApp
 										.addPreferredGap(ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
 										.addComponent(doubleRdo, GroupLayout.PREFERRED_SIZE, 131, GroupLayout.PREFERRED_SIZE))
 									.addComponent(hexTextField, Alignment.LEADING)
-									.addComponent(decTextField, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 348, Short.MAX_VALUE)))))
+									.addComponent(decTextField, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 348, Short.MAX_VALUE))))
+						.addComponent(binPane, Alignment.TRAILING, GroupLayout.PREFERRED_SIZE, 348, GroupLayout.PREFERRED_SIZE))
 					.addPreferredGap(ComponentPlacement.UNRELATED)
-					.addComponent(logTextArea, GroupLayout.DEFAULT_SIZE, 48, Short.MAX_VALUE)
+					.addComponent(logTextArea, GroupLayout.DEFAULT_SIZE, 395, Short.MAX_VALUE)
 					.addGap(6))
 		);
 		groupLayout.setVerticalGroup(
@@ -146,8 +139,8 @@ public class MainApp
 							.addGap(8)
 							.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
 								.addGroup(groupLayout.createSequentialGroup()
-									.addComponent(binPane, GroupLayout.PREFERRED_SIZE, 183, GroupLayout.PREFERRED_SIZE)
-									.addGap(37)
+									.addComponent(binPane, GroupLayout.PREFERRED_SIZE, 208, GroupLayout.PREFERRED_SIZE)
+									.addGap(12)
 									.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
 										.addComponent(logResultBtn)
 										.addComponent(helpBtn)))
@@ -156,8 +149,30 @@ public class MainApp
 		);
 		contentPane.setLayout(groupLayout);
 
+		frmRadixConverter.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
 		initComponents();
 		initEvents();
+	}
+
+	private void refreshConstraintCharacter()
+	{
+		if (intRdo.isSelected())
+		{
+			hexTextField.setMaxLength(8);
+
+			decTextField.setValidator(Utils.IntValidator);
+
+			binPane.refreshConstraintCharacter(32);
+		}
+		else {
+
+			hexTextField.setMaxLength(16);
+
+			decTextField.setValidator(Utils.DoubleValidator);
+
+			binPane.refreshConstraintCharacter(64);
+		}
 	}
 
 	private void initComponents()
@@ -178,6 +193,10 @@ public class MainApp
 		Font bigText = new Font(f.getName(), f.getStyle(), f.getSize()+3);
 		decTextField.setFont(bigText);
 		hexTextField.setFont(bigText);
+
+		hexTextField.setValidator(Utils.HexValidator);
+
+		refreshConstraintCharacter();
 	}
 
 	private void initEvents() {
@@ -189,6 +208,7 @@ public class MainApp
 				try {
 					binPane.showIntPane();
 					cleanForm();
+					refreshConstraintCharacter();
 				}
 				catch (Exception ex) {
 					ex.printStackTrace();
@@ -204,6 +224,7 @@ public class MainApp
 				try {
 					binPane.showDoublePane();
 					cleanForm();
+					refreshConstraintCharacter();
 				}
 				catch (Exception ex) {
 					ex.printStackTrace();

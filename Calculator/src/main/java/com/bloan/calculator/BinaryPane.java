@@ -12,17 +12,20 @@ import java.util.ArrayList;
 import javax.swing.BorderFactory;
 import javax.swing.JCheckBox;
 import javax.swing.JPanel;
-import javax.swing.JTextArea;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
 import net.java.dev.designgridlayout.DesignGridLayout;
 
+import com.bloan.calculator.utils.JTextAreaEx;
+import com.bloan.calculator.utils.RadixConverter;
+import com.bloan.calculator.utils.Utils;
+
 public class BinaryPane extends JPanel
 {
 	private static final long serialVersionUID = -6487988247126956202L;
 
-	private JTextArea textField;
+	private JTextAreaEx textField;
 
 	JPanel bitsPanel = new JPanel();
 	JPanel intPane = new JPanel();
@@ -43,7 +46,7 @@ public class BinaryPane extends JPanel
 	{
 		setLayout(new BorderLayout(0, 0));
 
-		textField = new JTextArea();
+		textField = new JTextAreaEx();
 		textField.setLineWrap(true);
 		textField.setBorder(BorderFactory.createLineBorder(Color.GRAY));
 		//Dimension preferredSize = textField.getPreferredSize();
@@ -53,6 +56,8 @@ public class BinaryPane extends JPanel
 		Font f = textField.getFont();
 		Font bigText = new Font(f.getName(), f.getStyle(), f.getSize()+3);
 		textField.setFont(bigText);
+		textField.setValidator(Utils.BinValidator);
+
 
 		add(bitsPanel, BorderLayout.CENTER);
 		bitsPanel.setLayout(new CardLayout(0, 0));
@@ -139,6 +144,8 @@ public class BinaryPane extends JPanel
 		layout.row().grid().add(doubleBitsCheck.subList(25, 38).toArray(new JCheckBox[0]));
 		layout.row().grid().add(doubleBitsCheck.subList(38, 51).toArray(new JCheckBox[0]));
 		layout.row().grid().add(doubleBitsCheck.subList(51, 64).toArray(new JCheckBox[0]));
+
+		//textField.setValid
 	}
 
 	private ActionListener bitActionListener = new ActionListener()
@@ -192,6 +199,11 @@ public class BinaryPane extends JPanel
 	public void setActionListener(ActionListener actionListener)
 	{
 		this.actionListener = actionListener;
+	}
+
+	public void refreshConstraintCharacter(int maxLength) {
+
+		textField.setMaxLength(maxLength);
 	}
 
 	/**

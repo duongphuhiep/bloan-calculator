@@ -1,4 +1,4 @@
-package com.bloan.calculator;
+package com.bloan.calculator.utils;
 
 import java.math.BigInteger;
 import java.security.InvalidParameterException;
@@ -15,7 +15,7 @@ import com.google.common.collect.HashBiMap;
  */
 public class RadixConverter {
 
-	private final static BiMap<String, String> HexBinRef = HashBiMap.create(16);
+	public final static BiMap<String, String> HexBinRef = HashBiMap.create(16);
 	static
 	{
 		HexBinRef.put("0", "0000");
