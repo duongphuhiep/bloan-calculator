@@ -22,6 +22,7 @@ import net.java.dev.designgridlayout.DesignGridLayout;
 import com.bloan.calculator.utils.JTextAreaEx;
 import com.bloan.calculator.utils.RadixConverter;
 import com.bloan.calculator.utils.Utils;
+import com.google.common.base.Strings;
 
 public class BinaryPane extends JPanel
 {
@@ -258,15 +259,17 @@ public class BinaryPane extends JPanel
 		}
 	}
 
-	/**
-	 * set border of the binary text field, use null parameter to restore the default border
-	 */
-	public void setTextFieldBorder(Border border) {
-		if (border == null) {
+
+	public void setErrorState(String errorMessage)
+	{
+		this.textField.setToolTipText(errorMessage);
+		if (Strings.isNullOrEmpty(errorMessage))
+		{
 			this.textField.setBorder(textFieldBorder);
 		}
-		else {
-			this.textField.setBorder(border);
+		else
+		{
+			this.textField.setBorder(Utils.redBorder);
 		}
 	}
 

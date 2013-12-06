@@ -170,7 +170,7 @@ public class MainApp
 		buttonGroup.add(doubleRdo);
 
 		ImageIcon helpIcon = new ImageIcon(getClass().getResource(
-				"help_icon.jpg"));
+				"help-24.png"));
 		helpBtn.setIcon(helpIcon);
 		helpBtn.setContentAreaFilled(false);
 		helpBtn.setBorder(BorderFactory.createEmptyBorder());
@@ -220,16 +220,13 @@ public class MainApp
 
 		decTextField.getDocument().addDocumentListener(new DocumentListener()
 		{
-			final Border normalBorder = decTextField.getBorder();
-
 			private void onChanged() {
 				if (skipChangeEvt>0) {
-					decTextField.setBorder(normalBorder);
+					decTextField.setErrorState(null);
 					return;
 				}
 				String dec = decTextField.getText().trim();
 				if (Strings.isNullOrEmpty(dec)) {
-					decTextField.setBorder(normalBorder);
 					cleanForm();
 					return;
 				}
@@ -248,13 +245,13 @@ public class MainApp
 
 					hexTextField.setText(hex);
 					binPane.setBinaryString(bin);
-					decTextField.setBorder(normalBorder);
+					decTextField.setErrorState(null);
 
 					allowLogResult();
 				}
 				catch (Exception ex) {
 					ex.printStackTrace();
-					decTextField.setBorder(Utils.redBorder);
+					decTextField.setErrorState(ex.getMessage());
 					forbidLogResult(ex.getMessage());
 				}
 				finally {
@@ -283,17 +280,14 @@ public class MainApp
 
 		hexTextField.getDocument().addDocumentListener(new DocumentListener()
 		{
-			final Border normalBorder = hexTextField.getBorder();
-
 			private void onChanged() {
 				if (skipChangeEvt>0) {
-					hexTextField.setBorder(normalBorder);
+					hexTextField.setErrorState(null);
 					return;
 				}
 
 				String hex = hexTextField.getText().trim().toUpperCase();
 				if (Strings.isNullOrEmpty(hex)) {
-					hexTextField.setBorder(normalBorder);
 					cleanForm();
 					return;
 				}
@@ -314,12 +308,12 @@ public class MainApp
 					decTextField.setText(dec);
 					binPane.setBinaryString(bin);
 
-					hexTextField.setBorder(normalBorder);
+					hexTextField.setErrorState(null);
 					allowLogResult();
 				}
 				catch (Exception ex) {
 					ex.printStackTrace();
-					hexTextField.setBorder(Utils.redBorder);
+					hexTextField.setErrorState(ex.getMessage());
 					forbidLogResult(ex.getMessage());
 				}
 				finally {
@@ -352,13 +346,12 @@ public class MainApp
 			public void actionPerformed(ActionEvent e)
 			{
 				if (skipChangeEvt>0) {
-					binPane.setTextFieldBorder(null);
+					binPane.setErrorState(null);
 					return;
 				}
 
 				String bin = binPane.getBinaryString();
 				if (Strings.isNullOrEmpty(bin)) {
-					binPane.setTextFieldBorder(null);
 					cleanForm();
 					return;
 				}
@@ -377,12 +370,12 @@ public class MainApp
 					decTextField.setText(dec);
 					hexTextField.setText(hex);
 
-					binPane.setTextFieldBorder(null);
+					binPane.setErrorState(null);
 					allowLogResult();
 				}
 				catch (Exception ex) {
 					ex.printStackTrace();
-					binPane.setTextFieldBorder(Utils.redBorder);
+					binPane.setErrorState(ex.getMessage());
 					forbidLogResult(ex.getMessage());
 				}
 				finally {
@@ -410,6 +403,7 @@ public class MainApp
 					logEntry.append("Bin: "+RadixConverter.trimFirstZero(binPane.getBinaryString())+"\n\n");
 
 					logTextArea.insert(logEntry.toString(), 0);
+					logTextArea.setCaretPosition(0);
 				}
 				catch (Exception ex) {
 					ex.printStackTrace();
@@ -437,6 +431,11 @@ public class MainApp
 			binPane.setBinaryString("");
 			decTextField.setText("");
 			hexTextField.setText("");
+
+			binPane.setErrorState(null);
+			decTextField.setErrorState(null);
+			hexTextField.setErrorState(null);
+
 			forbidLogResult("Nothing to log");
 		}
 		finally {
