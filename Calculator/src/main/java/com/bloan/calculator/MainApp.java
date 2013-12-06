@@ -1,11 +1,11 @@
 package com.bloan.calculator;
 
-import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Date;
 
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
@@ -15,7 +15,9 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.SwingUtilities;
@@ -32,6 +34,7 @@ public class MainApp
 {
 	private JFrame frmRadixConverter;
 	private int skipChangeEvt = 0;
+	private String preventLogResultMsg = null;
 
 	/**
 	 * Launch the application.
@@ -62,7 +65,6 @@ public class MainApp
 	{
 		initialize();
 	}
-
 	JRadioButton intRdo = new JRadioButton("Integer (32 bits)", true);
 	JRadioButton doubleRdo = new JRadioButton("Double (64 bits)", false);
 	JTextFieldEx decTextField = new JTextFieldEx();
@@ -72,6 +74,7 @@ public class MainApp
 	JTextArea logTextArea = new JTextArea();
 	BinaryPane binPane = new BinaryPane();
 
+	JScrollPane scrollLogTextArea;
 
 	/**
 	 * Initialize the contents of the frame.
@@ -87,6 +90,8 @@ public class MainApp
 		JLabel lblDec = new JLabel("Dec");
 		JLabel lblHex = new JLabel("Hex");
 		JLabel lblBin = new JLabel("Bin");
+		scrollLogTextArea = new JScrollPane (logTextArea,
+				   JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 
 		GroupLayout groupLayout = new GroupLayout(contentPane);
 		groupLayout.setHorizontalGroup(
@@ -117,7 +122,7 @@ public class MainApp
 									.addComponent(decTextField, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 348, Short.MAX_VALUE))))
 						.addComponent(binPane, Alignment.TRAILING, GroupLayout.PREFERRED_SIZE, 348, GroupLayout.PREFERRED_SIZE))
 					.addPreferredGap(ComponentPlacement.UNRELATED)
-					.addComponent(logTextArea, GroupLayout.DEFAULT_SIZE, 395, Short.MAX_VALUE)
+					.addComponent(scrollLogTextArea, GroupLayout.DEFAULT_SIZE, 395, Short.MAX_VALUE)
 					.addGap(6))
 		);
 		groupLayout.setVerticalGroup(
@@ -125,7 +130,7 @@ public class MainApp
 				.addGroup(groupLayout.createSequentialGroup()
 					.addContainerGap()
 					.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
-						.addComponent(logTextArea, GroupLayout.DEFAULT_SIZE, 551, Short.MAX_VALUE)
+						.addComponent(scrollLogTextArea, GroupLayout.DEFAULT_SIZE, 551, Short.MAX_VALUE)
 						.addGroup(groupLayout.createSequentialGroup()
 							.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
 								.addComponent(doubleRdo)
@@ -155,6 +160,7 @@ public class MainApp
 
 		initComponents();
 		initEvents();
+		cleanForm();
 	}
 
 	private void initComponents()
@@ -169,7 +175,9 @@ public class MainApp
 		helpBtn.setContentAreaFilled(false);
 		helpBtn.setBorder(BorderFactory.createEmptyBorder());
 
-		logTextArea.setBorder(BorderFactory.createTitledBorder("Log results"));
+		scrollLogTextArea.setBorder(BorderFactory.createTitledBorder("Log results"));
+		logTextArea.setEditable(false);
+		logTextArea.setAutoscrolls(true);
 
 		Font f = decTextField.getFont();
 		Font bigText = new Font(f.getName(), f.getStyle(), f.getSize()+3);
@@ -241,10 +249,13 @@ public class MainApp
 					hexTextField.setText(hex);
 					binPane.setBinaryString(bin);
 					decTextField.setBorder(normalBorder);
+
+					allowLogResult();
 				}
 				catch (Exception ex) {
-					decTextField.setBorder(Utils.redBorder);
 					ex.printStackTrace();
+					decTextField.setBorder(Utils.redBorder);
+					forbidLogResult(ex.getMessage());
 				}
 				finally {
 					skipChangeEvt--;
@@ -304,10 +315,12 @@ public class MainApp
 					binPane.setBinaryString(bin);
 
 					hexTextField.setBorder(normalBorder);
+					allowLogResult();
 				}
 				catch (Exception ex) {
 					ex.printStackTrace();
 					hexTextField.setBorder(Utils.redBorder);
+					forbidLogResult(ex.getMessage());
 				}
 				finally {
 					skipChangeEvt--;
@@ -363,16 +376,59 @@ public class MainApp
 					}
 					decTextField.setText(dec);
 					hexTextField.setText(hex);
+
+					binPane.setTextFieldBorder(null);
+					allowLogResult();
 				}
 				catch (Exception ex) {
 					ex.printStackTrace();
 					binPane.setTextFieldBorder(Utils.redBorder);
+					forbidLogResult(ex.getMessage());
 				}
 				finally {
 					skipChangeEvt--;
 				}
 			}
 		});
+
+		logResultBtn.addActionListener(new ActionListener()
+		{
+			/**
+			 * Generate a log entry and insert it to the first line
+			 */
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				try {
+					StringBuilder logEntry = new StringBuilder();
+
+					Date now = new Date();
+					String mode = intRdo.isSelected() ? "Integer":"Double";
+					logEntry.append(now.toString()+"    ---- "+mode+" ----\n");
+					logEntry.append("Dec: "+RadixConverter.trimFirstZero(decTextField.getText())+"\n");
+					logEntry.append("Hex: "+RadixConverter.trimFirstZero(hexTextField.getText())+"\n");
+					logEntry.append("Bin: "+RadixConverter.trimFirstZero(binPane.getBinaryString())+"\n\n");
+
+					logTextArea.insert(logEntry.toString(), 0);
+				}
+				catch (Exception ex) {
+					ex.printStackTrace();
+					displayExceptionDlg(ex);
+				}
+
+			}
+		});
+	}
+
+	private void allowLogResult() {
+		logResultBtn.setEnabled(true);
+		preventLogResultMsg = null;
+		logResultBtn.setToolTipText(null);
+	}
+	private void forbidLogResult(String reason) {
+		logResultBtn.setEnabled(false);
+		preventLogResultMsg = reason;
+		logResultBtn.setToolTipText(reason);
 	}
 
 	private void cleanForm() {
@@ -381,10 +437,14 @@ public class MainApp
 			binPane.setBinaryString("");
 			decTextField.setText("");
 			hexTextField.setText("");
+			forbidLogResult("Nothing to log");
 		}
 		finally {
 			skipChangeEvt--;
 		}
+	}
 
+	private void displayExceptionDlg(Exception ex) {
+		JOptionPane.showInternalMessageDialog(frmRadixConverter, ex.getStackTrace(), ex.getMessage(), JOptionPane.ERROR_MESSAGE);
 	}
 }

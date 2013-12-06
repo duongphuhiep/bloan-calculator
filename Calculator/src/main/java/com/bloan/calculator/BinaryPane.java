@@ -13,6 +13,7 @@ import javax.swing.BorderFactory;
 import javax.swing.JCheckBox;
 import javax.swing.JPanel;
 import javax.swing.border.Border;
+import javax.swing.border.EtchedBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
@@ -38,9 +39,8 @@ public class BinaryPane extends JPanel
 	private int skipChangeEvt = 0;
 	private boolean isDoublePaneShowed = false;
 
-	ActionListener actionListener;
-
-	Border textFieldBorder = BorderFactory.createLineBorder(Color.GRAY);
+	private ActionListener actionListener;
+	private Border textFieldBorder = BorderFactory.createEtchedBorder(EtchedBorder.LOWERED);
 
 	/**
 	 * Create the panel.
@@ -265,7 +265,9 @@ public class BinaryPane extends JPanel
 		if (border == null) {
 			this.textField.setBorder(textFieldBorder);
 		}
-		this.textField.setBorder(border);
+		else {
+			this.textField.setBorder(border);
+		}
 	}
 
 }
