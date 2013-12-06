@@ -21,7 +21,6 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.SwingUtilities;
-import javax.swing.border.Border;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
@@ -34,7 +33,7 @@ public class MainApp
 {
 	private JFrame frmRadixConverter;
 	private int skipChangeEvt = 0;
-	private String preventLogResultMsg = null;
+	//private String preventLogResultMsg = null;
 
 	/**
 	 * Launch the application.
@@ -193,13 +192,7 @@ public class MainApp
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
-				try {
-					binPane.showIntPane();
-					cleanForm();
-				}
-				catch (Exception ex) {
-					ex.printStackTrace();
-				}
+				intRdo_onChange();
 			}
 		});
 
@@ -208,135 +201,49 @@ public class MainApp
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
-				try {
-					binPane.showDoublePane();
-					cleanForm();
-				}
-				catch (Exception ex) {
-					ex.printStackTrace();
-				}
+				doubleRdo_onChange();
 			}
 		});
 
 		decTextField.getDocument().addDocumentListener(new DocumentListener()
 		{
-			private void onChanged() {
-				if (skipChangeEvt>0) {
-					decTextField.setErrorState(null);
-					return;
-				}
-				String dec = decTextField.getText().trim();
-				if (Strings.isNullOrEmpty(dec)) {
-					cleanForm();
-					return;
-				}
-				skipChangeEvt++;
-				try {
-					String hex;
-					if (intRdo.isSelected()) {
-						int value = Integer.parseInt(dec);
-						hex = RadixConverter.intToHex(value);
-					}
-					else {
-						double value = Double.parseDouble(dec);
-						hex = RadixConverter.doubleToHex(value);
-					}
-					String bin = RadixConverter.hexToBin(hex);
-
-					hexTextField.setText(hex);
-					binPane.setBinaryString(bin);
-					decTextField.setErrorState(null);
-
-					allowLogResult();
-				}
-				catch (Exception ex) {
-					ex.printStackTrace();
-					decTextField.setErrorState(ex.getMessage());
-					forbidLogResult(ex.getMessage());
-				}
-				finally {
-					skipChangeEvt--;
-				}
-			}
-
 			@Override
 			public void removeUpdate(DocumentEvent e)
 			{
-				onChanged();
+				decTextField_onChange();
 			}
 
 			@Override
 			public void insertUpdate(DocumentEvent e)
 			{
-				onChanged();
+				decTextField_onChange();
 			}
 
 			@Override
 			public void changedUpdate(DocumentEvent e)
 			{
-				onChanged();
+				decTextField_onChange();
 			}
 		});
 
 		hexTextField.getDocument().addDocumentListener(new DocumentListener()
 		{
-			private void onChanged() {
-				if (skipChangeEvt>0) {
-					hexTextField.setErrorState(null);
-					return;
-				}
-
-				String hex = hexTextField.getText().trim().toUpperCase();
-				if (Strings.isNullOrEmpty(hex)) {
-					cleanForm();
-					return;
-				}
-
-				skipChangeEvt++;
-				try {
-
-					String bin = RadixConverter.hexToBin(hex);;
-					String dec;
-
-					if (intRdo.isSelected()) {
-						dec = Integer.toString(RadixConverter.hexToInt(hex));
-					}
-					else {
-						dec = Double.toString(RadixConverter.hexToDouble(hex));
-					}
-
-					decTextField.setText(dec);
-					binPane.setBinaryString(bin);
-
-					hexTextField.setErrorState(null);
-					allowLogResult();
-				}
-				catch (Exception ex) {
-					ex.printStackTrace();
-					hexTextField.setErrorState(ex.getMessage());
-					forbidLogResult(ex.getMessage());
-				}
-				finally {
-					skipChangeEvt--;
-				}
-			}
-
 			@Override
 			public void removeUpdate(DocumentEvent e)
 			{
-				onChanged();
+				hexTextField_onChange();
 			}
 
 			@Override
 			public void insertUpdate(DocumentEvent e)
 			{
-				onChanged();
+				hexTextField_onChange();
 			}
 
 			@Override
 			public void changedUpdate(DocumentEvent e)
 			{
-				onChanged();
+				hexTextField_onChange();
 			}
 		});
 
@@ -345,42 +252,7 @@ public class MainApp
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
-				if (skipChangeEvt>0) {
-					binPane.setErrorState(null);
-					return;
-				}
-
-				String bin = binPane.getBinaryString();
-				if (Strings.isNullOrEmpty(bin)) {
-					cleanForm();
-					return;
-				}
-
-				skipChangeEvt++;
-				try {
-
-					String hex = RadixConverter.binToHex(bin);
-					String dec;
-					if (intRdo.isSelected()) {
-						dec = Integer.toString(RadixConverter.binToInt(bin));
-					}
-					else {
-						dec = Double.toString(RadixConverter.binToDouble(bin));
-					}
-					decTextField.setText(dec);
-					hexTextField.setText(hex);
-
-					binPane.setErrorState(null);
-					allowLogResult();
-				}
-				catch (Exception ex) {
-					ex.printStackTrace();
-					binPane.setErrorState(ex.getMessage());
-					forbidLogResult(ex.getMessage());
-				}
-				finally {
-					skipChangeEvt--;
-				}
+				binPane_onChange();
 			}
 		});
 
@@ -392,36 +264,206 @@ public class MainApp
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
-				try {
-					StringBuilder logEntry = new StringBuilder();
+				logResultBtn_onClick();
+			}
+		});
 
-					Date now = new Date();
-					String mode = intRdo.isSelected() ? "Integer":"Double";
-					logEntry.append(now.toString()+"    ---- "+mode+" ----\n");
-					logEntry.append("Dec: "+RadixConverter.trimFirstZero(decTextField.getText())+"\n");
-					logEntry.append("Hex: "+RadixConverter.trimFirstZero(hexTextField.getText())+"\n");
-					logEntry.append("Bin: "+RadixConverter.trimFirstZero(binPane.getBinaryString())+"\n\n");
-
-					logTextArea.insert(logEntry.toString(), 0);
-					logTextArea.setCaretPosition(0);
-				}
-				catch (Exception ex) {
-					ex.printStackTrace();
-					displayExceptionDlg(ex);
-				}
-
+		helpBtn.addActionListener(new ActionListener()
+		{
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				helpBtn_onClick();
 			}
 		});
 	}
 
+	private void intRdo_onChange()
+	{
+		try {
+			binPane.showIntPane();
+			cleanForm();
+		}
+		catch (Exception ex) {
+			ex.printStackTrace();
+		}
+	}
+
+	private void doubleRdo_onChange()
+	{
+		try {
+			binPane.showDoublePane();
+			cleanForm();
+		}
+		catch (Exception ex) {
+			ex.printStackTrace();
+		}
+	}
+
+	private void decTextField_onChange() {
+		if (skipChangeEvt>0) {
+			decTextField.setErrorState(null);
+			return;
+		}
+		String dec = decTextField.getText().trim();
+		if (Strings.isNullOrEmpty(dec)) {
+			cleanForm();
+			return;
+		}
+		skipChangeEvt++;
+		try {
+			String hex;
+			if (intRdo.isSelected()) {
+				int value = Integer.parseInt(dec);
+				hex = RadixConverter.intToHex(value);
+			}
+			else {
+				double value = Double.parseDouble(dec);
+				hex = RadixConverter.doubleToHex(value);
+			}
+			String bin = RadixConverter.hexToBin(hex);
+
+			hexTextField.setText(hex);
+			binPane.setBinaryString(bin);
+			decTextField.setErrorState(null);
+
+			allowLogResult();
+		}
+		catch (Exception ex) {
+			ex.printStackTrace();
+			decTextField.setErrorState(ex.toString());
+			forbidLogResult(ex.toString());
+		}
+		finally {
+			skipChangeEvt--;
+		}
+	}
+
+	private void hexTextField_onChange() {
+		if (skipChangeEvt>0) {
+			hexTextField.setErrorState(null);
+			return;
+		}
+
+		String hex = hexTextField.getText().trim().toUpperCase();
+		if (Strings.isNullOrEmpty(hex)) {
+			cleanForm();
+			return;
+		}
+
+		skipChangeEvt++;
+		try {
+
+			String bin = RadixConverter.hexToBin(hex);;
+			String dec;
+
+			if (intRdo.isSelected()) {
+				dec = Integer.toString(RadixConverter.hexToInt(hex));
+			}
+			else {
+				dec = Double.toString(RadixConverter.hexToDouble(hex));
+			}
+
+			decTextField.setText(dec);
+			binPane.setBinaryString(bin);
+
+			hexTextField.setErrorState(null);
+			allowLogResult();
+		}
+		catch (Exception ex) {
+			ex.printStackTrace();
+			hexTextField.setErrorState(ex.toString());
+			forbidLogResult(ex.toString());
+		}
+		finally {
+			skipChangeEvt--;
+		}
+	}
+
+	private void binPane_onChange()
+	{
+		if (skipChangeEvt>0) {
+			binPane.setErrorState(null);
+			return;
+		}
+
+		String bin = binPane.getBinaryString();
+		if (Strings.isNullOrEmpty(bin)) {
+			cleanForm();
+			return;
+		}
+
+		skipChangeEvt++;
+		try {
+
+			String hex = RadixConverter.binToHex(bin);
+			String dec;
+			if (intRdo.isSelected()) {
+				dec = Integer.toString(RadixConverter.binToInt(bin));
+			}
+			else {
+				dec = Double.toString(RadixConverter.binToDouble(bin));
+			}
+			decTextField.setText(dec);
+			hexTextField.setText(hex);
+
+			binPane.setErrorState(null);
+			allowLogResult();
+		}
+		catch (Exception ex) {
+			ex.printStackTrace();
+			binPane.setErrorState(ex.toString());
+			forbidLogResult(ex.toString());
+		}
+		finally {
+			skipChangeEvt--;
+		}
+	}
+
+	private void logResultBtn_onClick()
+	{
+		try {
+			StringBuilder logEntry = new StringBuilder();
+
+			Date now = new Date();
+			String mode = intRdo.isSelected() ? "Integer":"Double";
+			logEntry.append(now.toString()+"    ---- "+mode+" ----\n");
+			logEntry.append("Dec: "+RadixConverter.trimFirstZero(decTextField.getText())+"\n");
+			logEntry.append("Hex: "+RadixConverter.trimFirstZero(hexTextField.getText())+"\n");
+			logEntry.append("Bin: "+RadixConverter.trimFirstZero(binPane.getBinaryString())+"\n\n");
+
+			logTextArea.insert(logEntry.toString(), 0);
+			logTextArea.setCaretPosition(0);
+		}
+		catch (Exception ex) {
+			ex.printStackTrace();
+			displayExceptionDlg(ex);
+		}
+	}
+
+	private void helpBtn_onClick()
+	{
+		try {
+			StringBuilder aboutMessage = new StringBuilder();
+			aboutMessage.append("Radix Converter 1.0 (c) 2013\n");
+			aboutMessage.append("- Bich Loan TRAN\n");
+			aboutMessage.append("- Peter SALVATOR\n");
+			JOptionPane.showMessageDialog(frmRadixConverter, aboutMessage.toString(), "About", JOptionPane.INFORMATION_MESSAGE);
+		}
+		catch (Exception ex) {
+			ex.printStackTrace();
+			displayExceptionDlg(ex);
+		}
+	}
+
 	private void allowLogResult() {
 		logResultBtn.setEnabled(true);
-		preventLogResultMsg = null;
+		//preventLogResultMsg = null;
 		logResultBtn.setToolTipText(null);
 	}
 	private void forbidLogResult(String reason) {
 		logResultBtn.setEnabled(false);
-		preventLogResultMsg = reason;
+		//preventLogResultMsg = reason;
 		logResultBtn.setToolTipText(reason);
 	}
 
@@ -444,6 +486,8 @@ public class MainApp
 	}
 
 	private void displayExceptionDlg(Exception ex) {
-		JOptionPane.showInternalMessageDialog(frmRadixConverter, ex.getStackTrace(), ex.getMessage(), JOptionPane.ERROR_MESSAGE);
+		JOptionPane.showMessageDialog(frmRadixConverter, ex.getStackTrace(), ex.toString(), JOptionPane.ERROR_MESSAGE);
 	}
+
+
 }

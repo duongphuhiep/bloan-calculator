@@ -15,16 +15,10 @@ import com.bloan.calculator.utils.Utils.IStringValidator;
 	public class DocumentStringFilter extends DocumentFilter
 	{
 		private IStringValidator stringValidator;
-		private final JComponent source;
-//		private final Border originalBorder;
-//		private final static Border redBorder = BorderFactory.createLineBorder(
-//				Color.RED, 3);
 
 		public DocumentStringFilter(JComponent source, IStringValidator stringValidator)
 		{
-			this.source = source;
 			this.stringValidator = stringValidator;
-//			this.originalBorder = source.getBorder();
 		}
 
 		@Override
@@ -39,11 +33,10 @@ import com.bloan.calculator.utils.Utils.IStringValidator;
 			if (stringValidator.isValid(sb.toString()))
 			{
 				super.insertString(fb, offset, string, attr);
-//				this.source.setBorder(originalBorder);
 			}
 			else
 			{
-//				this.source.setBorder(redBorder);
+				//Notify user
 			}
 		}
 
@@ -60,11 +53,10 @@ import com.bloan.calculator.utils.Utils.IStringValidator;
 			if (stringValidator.isValid(sb.toString()))
 			{
 				super.replace(fb, offset, length, text, attrs);
-//				this.source.setBorder(originalBorder);
 			}
 			else
 			{
-//				this.source.setBorder(redBorder);
+				//Notify user
 			}
 		}
 
@@ -80,11 +72,10 @@ import com.bloan.calculator.utils.Utils.IStringValidator;
 			if (stringValidator.isValid(sb.toString()))
 			{
 				super.remove(fb, offset, length);
-//				this.source.setBorder(originalBorder);
 			}
 			else
 			{
-//				this.source.setBorder(redBorder);
+				//Notify user
 			}
 		}
 
