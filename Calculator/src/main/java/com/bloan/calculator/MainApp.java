@@ -446,8 +446,8 @@ public class MainApp
 		try {
 			StringBuilder aboutMessage = new StringBuilder();
 			aboutMessage.append("Radix Converter 1.0 (c) 2013\n");
-			aboutMessage.append("- Bich Loan TRAN\n");
-			aboutMessage.append("- Peter SALVATOR\n");
+			aboutMessage.append("Phu-Hiep DUONG\n");
+			aboutMessage.append("duongphuhiep@gmail.com\n");
 			JOptionPane.showMessageDialog(frmRadixConverter, aboutMessage.toString(), "About", JOptionPane.INFORMATION_MESSAGE);
 		}
 		catch (Exception ex) {
