@@ -8,6 +8,19 @@
 	<name>Radix Converter</name>
 	<description>Scientific Radix Converter calculator base 2, 10, 16</description>
 
+	<build>
+		<plugins>
+		  <plugin>
+			<groupId>org.apache.maven.plugins</groupId>
+			<artifactId>maven-compiler-plugin</artifactId>
+			<configuration>
+			  <!-- or whatever version you use -->
+			  <source>1.6</source>
+			  <target>1.6</target>
+			</configuration>
+		  </plugin>
+		</plugins>
+	</build>
 	<dependencies>
 		<dependency>
 			<groupId>net.java.dev.designgridlayout</groupId>
