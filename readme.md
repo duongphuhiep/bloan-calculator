@@ -1,7 +1,7 @@
 #Radix Converter 1.0
 --------------------
 
-Il sâ€™agit dâ€™une Calculatrice pour lâ€™informaticien : cette calculatrice permettra au moins de calculer en base 2, 10 et 16, de rentrer et visualiser dans ces bases les valeurs entiÃ¨res signÃ©es codÃ©es en complÃ©ment Ã  deux et les nombres flottants codÃ©s avec la norme IEEE-754, de mettre en Ã©vidence la mantisse et l'exposant, d'effectuer des conversions.
+Il s’agit d’une Calculatrice pour l’informaticien : cette calculatrice permettra au moins de calculer en base 2, 10 et 16, de rentrer et visualiser dans ces bases les valeurs entières signées codées en complément à deux et les nombres flottants codés avec la norme IEEE-754, de mettre en évidence la mantisse et l'exposant, d'effectuer des conversions.
 
 ## Vocabulaire
 
@@ -18,31 +18,31 @@ Binary
 :   base 2
 
 La norme IEEE-757
-:   prÃ©sentation standardisÃ©e de nombres rÃ©els en binaire dans lâ€™ordinateur ([Wikipedia](http://en.wikipedia.org/wiki/IEEE_754-1985))
+:   présentation standardisée de nombres réels en binaire dans l’ordinateur ([Wikipedia](http://en.wikipedia.org/wiki/IEEE_754-1985))
 
-ComplÃ©ment Ã  deux
-:   reprÃ©sentation binaire des entiers relatifs ([Wikipedia](http://fr.wikipedia.org/wiki/Compl%C3%A9ment_%C3%A0_deux))
+Complément à deux
+:   représentation binaire des entiers relatifs ([Wikipedia](http://fr.wikipedia.org/wiki/Compl%C3%A9ment_%C3%A0_deux))
 
 ## Fonctionnalites et exigences
 
 ### Fonctionnalites de base: conversion
 
  * Application client-lourd: Java Swing 
- * Capable de traiter les nombre rÃ©els en 64 bits et les nombre entiers signÃ©s 32 bits
+ * Capable de traiter les nombre réels en 64 bits et les nombre entiers signés 32 bits
  * Utilisateurs peut rentrer facilement les nombres en Binaire / Hexa decimal / decimal
- * La conversion se fait en temps rÃ©el (qui se rÃ©alise une fois la valeur dâ€™utilisateur est rentrÃ©)
- * Montrer les valeurs en toutes bases (2, 10, 16) en mÃªme temps sur lâ€™interface
- * Capable dâ€™enregistrer temporairement un rÃ©sultat de conversion afin de comparer les diffÃ©rences conversion.
+ * La conversion se fait en temps réel (qui se réalise une fois la valeur d’utilisateur est rentré)
+ * Montrer les valeurs en toutes bases (2, 10, 16) en même temps sur l’interface
+ * Capable d’enregistrer temporairement un résultat de conversion afin de comparer les différences conversion.
 
 ### Fonctionnalites optionnels: calculatrice
 
- * Evaluer lâ€™expression mathÃ©matiques `+`, `-`, `*`, `/` en rentrant les valeurs en Base 2, 10, 16
- * Afficher les rÃ©sultats en base 2, 10, 16 en mÃªme temps
- * Enregistrer temporairement un rÃ©sultat dâ€™Ã©valuation
+ * Evaluer l’expression mathématiques `+`, `-`, `*`, `/` en rentrant les valeurs en Base 2, 10, 16
+ * Afficher les résultats en base 2, 10, 16 en même temps
+ * Enregistrer temporairement un résultat d’évaluation
 
 ### License
 
-Lâ€™application sera Open Sources sous [GNU General Public License](http://www.gnu.org/licenses/gpl.html)
+L’application sera Open Sources sous [GNU General Public License](http://www.gnu.org/licenses/gpl.html)
 
 ## Compilation and Execution
 
